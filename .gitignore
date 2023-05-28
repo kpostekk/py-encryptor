@@ -1,0 +1,5 @@
+_pyen/
+_pyde/
+.pyd
+.pyo
+.pyc
