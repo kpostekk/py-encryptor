@@ -3,9 +3,9 @@ from typing import Type
 
 import PySimpleGUI as sg
 
-from py_encryptor._core import Aes256EAX, CaesarBase64, EncryptionAlgorithm, VigenereBase85
+from py_encryptor._core import Aes256EAX, CaesarBase64, EncryptionAlgorithm, VigenereBase64
 
-available_algorithms: list[Type[EncryptionAlgorithm]] = [Aes256EAX, CaesarBase64, VigenereBase85]
+available_algorithms: list[Type[EncryptionAlgorithm]] = [Aes256EAX, CaesarBase64, VigenereBase64]
 
 # Create a gui for encrypt/decrypt app
 
