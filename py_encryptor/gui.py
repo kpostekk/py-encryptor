@@ -3,7 +3,8 @@ from typing import Type
 
 import PySimpleGUI as sg
 
-from py_encryptor._core import Aes256EAX, CaesarBase64, EncryptionAlgorithm, VigenereBase64
+from py_encryptor.algorithms import Aes256EAX, CaesarBase64, VigenereBase64
+from py_encryptor.algorithms.base import EncryptionAlgorithm
 
 available_algorithms: list[Type[EncryptionAlgorithm]] = [Aes256EAX, CaesarBase64, VigenereBase64]
 
