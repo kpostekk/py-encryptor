@@ -29,11 +29,11 @@ class BaseEncryptionAlgorithm(abc.ABC):
         return Path.joinpath(output_dir, self.file_path.name)
 
     @abc.abstractmethod
-    def encrypt(self):
+    def encrypt(self, target_path: Path | None = None):
         pass
 
     @abc.abstractmethod
-    def decrypt(self):
+    def decrypt(self, target_path: Path | None = None):
         pass
 
     @classmethod

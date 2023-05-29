@@ -9,22 +9,24 @@ from py_encryptor.utils.decorators import register_algorithm
 class CaesarBase64(BaseEncryptionAlgorithm):
     """This cipher encodes the file using Base64 and then shifts the characters by the key."""
 
+    # base64url alphabet
+    _alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
+
     def __init__(self, key: str, file_path: Path):
         super().__init__(key, file_path)
         # base64url alphabet
-        self.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
         self.key = int(key)
 
     def __caesar(self, data: str, key: int):
         result = ''
         for char in data:
             if char in self.alphabet:
-                result += self.alphabet[(self.alphabet.index(char) + key) % len(self.alphabet)]
+                result += self._alphabet[(self._alphabet.index(char) + key) % len(self._alphabet)]
             else:
                 result += char
         return result
 
-    def encrypt(self):
+    def encrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
         with open(self._gen_encryption_output_path(), 'wb') as f:
@@ -33,7 +35,7 @@ class CaesarBase64(BaseEncryptionAlgorithm):
                 self.key).encode('utf-8')
                     )
 
-    def decrypt(self):
+    def decrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
         with open(self._gen_decryption_output_path(), 'wb') as f:
@@ -63,7 +65,7 @@ class VigenereBase64(BaseEncryptionAlgorithm):
             result += chr((ord(char) - ord(self.key[i % len(self.key)])) % 256)
         return result
 
-    def encrypt(self):
+    def encrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
         with open(self._gen_encryption_output_path(), 'wb') as f:
@@ -71,7 +73,7 @@ class VigenereBase64(BaseEncryptionAlgorithm):
                 base64.urlsafe_b64encode(data).decode('utf-8')).encode('utf-8')
                     )
 
-    def decrypt(self):
+    def decrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
         with open(self._gen_decryption_output_path(), 'wb') as f:

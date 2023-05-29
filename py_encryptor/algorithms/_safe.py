@@ -29,16 +29,16 @@ class Aes256EAX(BaseEncryptionAlgorithm):
     def _create_cipher(key: str, nonce: bytes):
         return AES.new(pad(key.encode('utf-8'), 32), AES.MODE_EAX, nonce=nonce)
 
-    def encrypt(self):
+    def encrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
-        with open(self._gen_encryption_output_path(), 'wb') as f:
+        with open(target_path or self._gen_encryption_output_path(), 'wb') as f:
             f.write(self.cipher.encrypt(data))
 
-    def decrypt(self):
+    def decrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
-        with open(self._gen_decryption_output_path(), 'wb') as f:
+        with open(target_path or self._gen_decryption_output_path(), 'wb') as f:
             f.write(self.cipher.decrypt(data))
 
     @classmethod
@@ -56,13 +56,13 @@ class Aes256CBC(Aes256EAX):
     def display_name(cls):
         return 'AES-256 (CBC, Experimental)'
 
-    def encrypt(self):
+    def encrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
         with open(self._gen_encryption_output_path(), 'wb') as f:
             f.write(self.cipher.encrypt(pad(data, 16)))
 
-    def decrypt(self):
+    def decrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
         with open(self._gen_decryption_output_path(), 'wb') as f:

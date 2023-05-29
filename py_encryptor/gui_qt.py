@@ -2,8 +2,8 @@ import sys
 from pathlib import Path
 from typing import Type
 
-import PySide6
-from PySide6.QtGui import QFont, QDropEvent
+import PySide6.QtCore
+from PySide6.QtGui import QFont
 from PySide6.QtWidgets import *
 
 from py_encryptor.algorithms.base import BaseEncryptionAlgorithm  # prevent circular import
@@ -15,15 +15,26 @@ class EncryptorFrame(QFrame):
         super(EncryptorFrame, self).__init__(parent)
         self.setAcceptDrops(True)
 
-        # File selector
-        self.file_layout = QHBoxLayout()
-        self.file_field = QLineEdit()
-        self.file_field.setPlaceholderText("Ścieżka do pliku")
-        self.file_select_btn = QPushButton("Wybierz plik")
-        self.file_select_btn.clicked.connect(lambda: self.file_field.setText(QFileDialog.getOpenFileName(self)[0]))
+        # File selector (source)
+        self.file_source_layout = QHBoxLayout()
+        self.file_source_field = QLineEdit()
+        self.file_source_field.setPlaceholderText("Ścieżka do pliku")
+        self.file_source_select_btn = QPushButton("Wybierz plik")
+        self.file_source_select_btn.clicked.connect(self.requestFile(self.file_source_field))
 
-        self.file_layout.addWidget(self.file_field)
-        self.file_layout.addWidget(self.file_select_btn)
+        self.file_source_layout.addWidget(self.file_source_field)
+        self.file_source_layout.addWidget(self.file_source_select_btn)
+
+        # File selector (target)
+        self.file_target_layout = QHBoxLayout()
+        self.file_target_field = QLineEdit()
+        self.file_target_field.setPlaceholderText("Ścieżka do pliku")
+        self.file_target_select_btn = QPushButton("Wybierz plik")
+        self.file_target_select_btn.clicked.connect(self.requestFile(self.file_target_field))
+        # self.file_target_select_btn.clicked.connect(se)
+
+        self.file_target_layout.addWidget(self.file_target_field)
+        self.file_target_layout.addWidget(self.file_target_select_btn)
 
         # Password input
         self.password_input = QLineEdit()
@@ -47,21 +58,41 @@ class EncryptorFrame(QFrame):
 
         # Create layout and add widgets
         layout = QVBoxLayout()
-        layout.addLayout(self.file_layout)
+        layout.addWidget(QLabel("Plik wejściowy"))
+        layout.addLayout(self.file_source_layout)
+        layout.addWidget(QLabel("Plik wyjściowy"))
+        layout.addLayout(self.file_target_layout)
+        layout.addSpacing(10)
         layout.addWidget(self.password_input)
         layout.addLayout(self.button_layout)
         # Set dialog layout
         self.setLayout(layout)
 
+    def _suggested_output_path(self):
+        p = Path(self.file_source_field.text())
+        fn = p.stem + "_encrypted" + p.suffix
+        return str(Path.joinpath(p.parent, fn))
+
+    def requestFile(self, result_target: QLineEdit):
+        def wrapped():
+            filepath, _ = QFileDialog.getOpenFileName(self)
+            print(filepath)
+            result_target.setText(filepath)
+
+            if result_target is self.file_source_field:
+                self.file_target_field.setText(self._suggested_output_path())
+
+        return wrapped
+
     def encrypt(self):
         cryp = self.getCryp()
-        cryp.encrypt()
+        cryp.encrypt(Path(self.file_target_field.text()))
         self.actionSucessful("Pomyślnie zaszyfrowano plik!")
 
     def getCryp(self):
         try:
             alg: Type[BaseEncryptionAlgorithm] = self.algorithms_box.currentData()
-            cryp = alg(self.password_input.text(), Path(self.file_field.text()))
+            cryp = alg(self.password_input.text(), Path(self.file_source_field.text()))
             print(cryp)
             return cryp
         except ValueError as e:
@@ -76,7 +107,7 @@ class EncryptorFrame(QFrame):
     def dropEvent(self, event: PySide6.QtGui.QDropEvent) -> None:
         for url in event.mimeData().urls():
             if url.isLocalFile():
-                self.file_field.setText(url.toLocalFile())
+                self.file_source_field.setText(url.toLocalFile())
                 return
 
     def actionSucessful(self, msg: str):
@@ -90,7 +121,7 @@ if __name__ == '__main__':
     form = EncryptorFrame()
     form.show()
     form.setWindowTitle("Python encryption tool")
-    form.resize(500, form.size().height())
+    form.resize(400, form.size().height())
     form.setFixedHeight(form.size().height())
     # Run the main Qt loop
     sys.exit(app.exec())
