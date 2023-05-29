@@ -48,7 +48,7 @@ class CaesarBase64(BaseEncryptionAlgorithm):
 
     @classmethod
     def display_name(cls):
-        return 'Caesar (Base64, Unsafe)'
+        return 'Caesar (Base64, Unsafe, Slow)'
 
 
 @register_algorithm
@@ -86,4 +86,4 @@ class VigenereBase64(BaseEncryptionAlgorithm):
 
     @classmethod
     def display_name(cls):
-        return 'Vigenere (Base64, Unsafe)'
+        return 'Vigenere (Base64, Slow)'
