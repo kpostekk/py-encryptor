@@ -89,9 +89,6 @@ class EncryptorFrame(QFrame):
 
     def encrypt_decrypt(self, mode: typing.Literal["encrypt", "decrypt"]):
         def wrapped():
-            if len(self.file_target_field.text()) < 1 or len(self.file_source_field.text()) < 1:
-                return
-
             if Path(self.file_target_field.text()).exists():
                 decision = QMessageBox.warning(self, "Plik już istnieje!",
                                                "Czy chcesz nadpisać plik " + self.file_target_field.text() + " ?",
@@ -108,7 +105,7 @@ class EncryptorFrame(QFrame):
                 raise ValueError()
             self.actionSucessful("Pomyślnie zaszyfrowano plik!")
 
-        return wrapped()
+        return wrapped
 
     def getCryp(self):
         try:
