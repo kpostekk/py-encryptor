@@ -73,7 +73,7 @@ class EncryptorFrame(QFrame):
 
     def _suggested_output_path(self):
         p = Path(self.file_source_field.text())
-        fn = p.stem + "_encrypted" + p.suffix
+        fn = p.stem + ".encrypted" + p.suffix
         return str(Path.joinpath(p.parent, fn))
 
     def requestFile(self, result_target: QLineEdit):

@@ -45,7 +45,7 @@ def main():
 
         if event == 'file_source':
             p = Path(values['file_source'])
-            fn = p.stem + "_encrypted" + p.suffix
+            fn = p.stem + ".encrypted" + p.suffix
             window['file_target'].update(str(Path.joinpath(p.parent, fn)))
             # values['file_target'] = str(Path.joinpath(p.parent, fn))
 
