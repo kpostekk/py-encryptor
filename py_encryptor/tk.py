@@ -11,8 +11,10 @@ available_algorithms: list[Type[BaseEncryptionAlgorithm]] = AlgorithmsManager.av
 # Create a gui for encrypt/decrypt app
 
 layout = [
-    [sg.Text('Select a file to encrypt/decrypt:')],
-    [sg.Input(key='file'), sg.FileBrowse()],
+    [sg.Text('Select a source file:')],
+    [sg.Input(key='file_source', enable_events=True), sg.FileBrowse(key="file_source_picker", enable_events=True)],
+    [sg.Text('Select a target (output) file:')],
+    [sg.Input(key='file_target'), sg.FileBrowse()],
     [sg.Text('Enter a password:')],
     [sg.InputText(key='passwd', password_char='*')],
     [sg.Text(key='status', visible=False)],
@@ -20,8 +22,7 @@ layout = [
     [sg.Button('Encrypt', key='encrypt'), sg.Button('Decrypt', key='decrypt')],
 ]
 
-window = sg.Window('Encrypt/Decrypt', layout)
-c = None
+window = sg.Window('Encrypt/Decrypt', layout, resizable=True)
 
 
 def get_algorithm_by_name(name: str) -> Type[BaseEncryptionAlgorithm]:
@@ -34,28 +35,35 @@ def get_algorithm_by_name(name: str) -> Type[BaseEncryptionAlgorithm]:
 def main():
     while True:
         event, values = window.read()
+
         print(event, values)
 
         if event == sg.WIN_CLOSED:
             break
 
-        if values['passwd'] is None or values['file'] is None:
+        if event == 'file_source':
+            p = Path(values['file_source'])
+            fn = p.stem + "_encrypted" + p.suffix
+            window['file_target'].update(str(Path.joinpath(p.parent, fn)))
+            # values['file_target'] = str(Path.joinpath(p.parent, fn))
+
+        if event not in ['encrypt', 'decrypt']:
             continue
 
         try:
             alg = get_algorithm_by_name(values['alg-combo'])
-            crypt = alg(values['passwd'], Path(values['file']))
+            crypt = alg(values['passwd'], Path(values['file_source']))
 
             if event == 'encrypt':
                 window['status'].update('Encrypting...', visible=True)
-                crypt.encrypt()
+                crypt.encrypt(Path(values['file_target']))
                 window['status'].update('Done!', visible=True)
             if event == 'decrypt':
                 window['status'].update('Decrypting...', visible=True)
-                crypt.decrypt()
+                crypt.decrypt(Path(values['file_target']))
                 window['status'].update('Done!', visible=True)
         except Exception as e:
-            sg.popup_error(str(e), title=type(e).__name__,)
+            sg.popup_error(str(e), title=type(e).__name__, )
 
 
 if __name__ == '__main__':
