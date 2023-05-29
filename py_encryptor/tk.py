@@ -10,13 +10,15 @@ available_algorithms: list[Type[BaseEncryptionAlgorithm]] = AlgorithmsManager.av
 
 # Create a gui for encrypt/decrypt app
 
+sg.theme("Default")
+
 layout = [
     [sg.Text('Select a source file:')],
-    [sg.Input(key='file_source', enable_events=True), sg.FileBrowse(key="file_source_picker", enable_events=True)],
+    [sg.Input(key='file_source', enable_events=True, expand_x=True), sg.FileBrowse(key="file_source_picker", enable_events=True)],
     [sg.Text('Select a target (output) file:')],
-    [sg.Input(key='file_target'), sg.FileBrowse()],
+    [sg.Input(key='file_target', expand_x=True), sg.FileBrowse()],
     [sg.Text('Enter a password:')],
-    [sg.InputText(key='passwd', password_char='*')],
+    [sg.InputText(key='passwd', password_char='*', expand_x=True)],
     [sg.Text(key='status', visible=False)],
     [sg.Combo([alg.display_name() for alg in available_algorithms], key='alg-combo', default_value='AES-256 (EAX)')],
     [sg.Button('Encrypt', key='encrypt'), sg.Button('Decrypt', key='decrypt')],
