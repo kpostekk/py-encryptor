@@ -15,7 +15,10 @@ class CaesarBase64(BaseEncryptionAlgorithm):
     def __init__(self, key: str, file_path: Path):
         super().__init__(key, file_path)
         # base64url alphabet
-        self.key = int(key)
+        try:
+            self.key = int(key)
+        except Exception as e:
+            raise ValueError("Provided key is not a valid Caesar key!")
 
     def __caesar(self, data: str, key: int):
         result = ''
@@ -45,7 +48,7 @@ class CaesarBase64(BaseEncryptionAlgorithm):
 
     @classmethod
     def display_name(cls):
-        return 'Caesar (Base64)'
+        return 'Caesar (Base64, Unsafe)'
 
 
 @register_algorithm
@@ -83,4 +86,4 @@ class VigenereBase64(BaseEncryptionAlgorithm):
 
     @classmethod
     def display_name(cls):
-        return 'Vigenere (Base64)'
+        return 'Vigenere (Base64, Unsafe)'
