@@ -2,7 +2,7 @@ from pathlib import Path
 
 from Cryptodome.Cipher import AES
 from Cryptodome.Hash import SHA1
-from Cryptodome.Util.Padding import pad, unpad
+from Cryptodome.Util.Padding import pad
 
 from py_encryptor.algorithms.base import BaseEncryptionAlgorithm
 from py_encryptor.utils.decorators import register_algorithm

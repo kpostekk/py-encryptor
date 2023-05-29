@@ -20,7 +20,7 @@ class CaesarBase64(BaseEncryptionAlgorithm):
     def __caesar(self, data: str, key: int):
         result = ''
         for char in data:
-            if char in self.alphabet:
+            if char in self._alphabet:
                 result += self._alphabet[(self._alphabet.index(char) + key) % len(self._alphabet)]
             else:
                 result += char
@@ -29,7 +29,7 @@ class CaesarBase64(BaseEncryptionAlgorithm):
     def encrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
-        with open(self._gen_encryption_output_path(), 'wb') as f:
+        with open(target_path or self._gen_encryption_output_path(), 'wb') as f:
             f.write(self.__caesar(
                 base64.urlsafe_b64encode(data).decode('utf-8'),
                 self.key).encode('utf-8')
@@ -38,7 +38,7 @@ class CaesarBase64(BaseEncryptionAlgorithm):
     def decrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
-        with open(self._gen_decryption_output_path(), 'wb') as f:
+        with open(target_path or self._gen_decryption_output_path(), 'wb') as f:
             f.write(base64.urlsafe_b64decode(
                 self.__caesar(data.decode('utf-8'), -self.key)
             ))
@@ -68,7 +68,7 @@ class VigenereBase64(BaseEncryptionAlgorithm):
     def encrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
-        with open(self._gen_encryption_output_path(), 'wb') as f:
+        with open(target_path or self._gen_encryption_output_path(), 'wb') as f:
             f.write(self.__vigenere(
                 base64.urlsafe_b64encode(data).decode('utf-8')).encode('utf-8')
                     )
@@ -76,7 +76,7 @@ class VigenereBase64(BaseEncryptionAlgorithm):
     def decrypt(self, target_path: Path | None = None):
         with open(self.file_path, 'rb') as f:
             data = f.read()
-        with open(self._gen_decryption_output_path(), 'wb') as f:
+        with open(target_path or self._gen_decryption_output_path(), 'wb') as f:
             f.write(base64.urlsafe_b64decode(
                 self.__vinere_decrypt(data.decode('utf-8'))
             ))
