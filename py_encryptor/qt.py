@@ -127,6 +127,7 @@ class EncryptorFrame(QFrame):
         for url in event.mimeData().urls():
             if url.isLocalFile():
                 self.file_source_field.setText(url.toLocalFile())
+                self.file_target_field.setText(self._suggested_output_path())
                 return
 
     def actionSucessful(self, msg: str):
