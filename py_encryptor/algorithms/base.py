@@ -2,7 +2,7 @@ import abc
 from pathlib import Path
 
 
-class EncryptionAlgorithm(abc.ABC):
+class BaseEncryptionAlgorithm(abc.ABC):
     def __init__(self, key: str, file_path: Path):
         if not file_path.is_file():
             raise ValueError('"file_path" must be a file!')
@@ -39,3 +39,6 @@ class EncryptionAlgorithm(abc.ABC):
     @classmethod
     def display_name(cls):
         return cls.__name__
+
+    def __repr__(self):
+        return f'<Encryption alg. "{self.__class__.__name__}">'

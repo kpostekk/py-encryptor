@@ -1,10 +1,12 @@
 import base64
 from pathlib import Path
 
-from py_encryptor.algorithms.base import EncryptionAlgorithm
+from py_encryptor.algorithms.base import BaseEncryptionAlgorithm
+from py_encryptor.utils.decorators import register_algorithm
 
 
-class CaesarBase64(EncryptionAlgorithm):
+@register_algorithm
+class CaesarBase64(BaseEncryptionAlgorithm):
     """This cipher encodes the file using Base64 and then shifts the characters by the key."""
 
     def __init__(self, key: str, file_path: Path):
@@ -44,7 +46,8 @@ class CaesarBase64(EncryptionAlgorithm):
         return 'Caesar (Base64)'
 
 
-class VigenereBase64(EncryptionAlgorithm):
+@register_algorithm
+class VigenereBase64(BaseEncryptionAlgorithm):
     def __init__(self, key: str, file_path: Path):
         super().__init__(key, file_path)
 

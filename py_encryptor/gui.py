@@ -3,10 +3,10 @@ from typing import Type
 
 import PySimpleGUI as sg
 
-from py_encryptor.algorithms import Aes256EAX, CaesarBase64, VigenereBase64, Aes256CBC
-from py_encryptor.algorithms.base import EncryptionAlgorithm
+from py_encryptor.algorithms.base import BaseEncryptionAlgorithm
+from py_encryptor.utils.manager import AlgorithmsManager
 
-available_algorithms: list[Type[EncryptionAlgorithm]] = [Aes256EAX, Aes256CBC, CaesarBase64, VigenereBase64]
+available_algorithms: list[Type[BaseEncryptionAlgorithm]] = AlgorithmsManager.available_algorithms
 
 # Create a gui for encrypt/decrypt app
 
@@ -24,7 +24,7 @@ window = sg.Window('Encrypt/Decrypt', layout)
 c = None
 
 
-def get_algorithm_by_name(name: str) -> Type[EncryptionAlgorithm]:
+def get_algorithm_by_name(name: str) -> Type[BaseEncryptionAlgorithm]:
     for alg in available_algorithms:
         if alg.display_name() == name:
             return alg

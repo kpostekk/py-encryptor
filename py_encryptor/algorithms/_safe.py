@@ -4,10 +4,12 @@ from Cryptodome.Cipher import AES
 from Cryptodome.Hash import SHA1
 from Cryptodome.Util.Padding import pad, unpad
 
-from py_encryptor.algorithms.base import EncryptionAlgorithm
+from py_encryptor.algorithms.base import BaseEncryptionAlgorithm
+from py_encryptor.utils.decorators import register_algorithm
 
 
-class Aes256EAX(EncryptionAlgorithm):
+@register_algorithm
+class Aes256EAX(BaseEncryptionAlgorithm):
     def __init__(self, key: str, file_path: Path):
         if len(key) < 8:
             raise ValueError('Key must be at least 8 characters long!')
@@ -44,6 +46,7 @@ class Aes256EAX(EncryptionAlgorithm):
         return 'AES-256 (EAX)'
 
 
+@register_algorithm
 class Aes256CBC(Aes256EAX):
     @staticmethod
     def _create_cipher(key: str, nonce: bytes):
