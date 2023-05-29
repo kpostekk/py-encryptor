@@ -13,7 +13,7 @@ def cli():
 @click.option('--passwd', '-p', help='Password to encrypt file')
 def encrypt(file, passwd):
     c = Cryptor(passwd, file)
-    c.encrypt()
+    c.encrypt_decrypt()
 
 
 @cli.command()

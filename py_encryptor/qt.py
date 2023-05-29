@@ -1,4 +1,5 @@
 import sys
+import typing
 from pathlib import Path
 from typing import Type
 
@@ -50,8 +51,10 @@ class EncryptorFrame(QFrame):
         # Encrypt, decrypt actions
         self.button_layout = QHBoxLayout()
         self.encrypt_btn = QPushButton("Zaszyfruj")
-        self.encrypt_btn.clicked.connect(self.encrypt)
+        self.encrypt_btn.clicked.connect(self.encrypt_decrypt("encrypt"))
         self.decrypt_btn = QPushButton("Odszyfruj")
+        self.decrypt_btn.clicked.connect(self.encrypt_decrypt("decrypt"))
+
         self.button_layout.addWidget(self.algorithms_box, 1)
         self.button_layout.addWidget(self.encrypt_btn, 1)
         self.button_layout.addWidget(self.decrypt_btn, 1)
@@ -84,10 +87,28 @@ class EncryptorFrame(QFrame):
 
         return wrapped
 
-    def encrypt(self):
-        cryp = self.getCryp()
-        cryp.encrypt(Path(self.file_target_field.text()))
-        self.actionSucessful("Pomyślnie zaszyfrowano plik!")
+    def encrypt_decrypt(self, mode: typing.Literal["encrypt", "decrypt"]):
+        def wrapped():
+            if len(self.file_target_field.text()) < 1 or len(self.file_source_field.text()) < 1:
+                return
+
+            if Path(self.file_target_field.text()).exists():
+                decision = QMessageBox.warning(self, "Plik już istnieje!",
+                                               "Czy chcesz nadpisać plik " + self.file_target_field.text() + " ?",
+                                               QMessageBox.StandardButton.Yes, QMessageBox.StandardButton.Cancel)
+                if decision == 4194304:
+                    return
+
+            cryp = self.getCryp()
+            if mode == "encrypt":
+                cryp.encrypt(Path(self.file_target_field.text()))
+            elif mode == "decrypt":
+                cryp.decrypt(Path(self.file_target_field.text()))
+            else:
+                raise ValueError()
+            self.actionSucessful("Pomyślnie zaszyfrowano plik!")
+
+        return wrapped()
 
     def getCryp(self):
         try:
@@ -97,6 +118,7 @@ class EncryptorFrame(QFrame):
             return cryp
         except ValueError as e:
             QMessageBox.critical(self, e.__class__.__name__, str(e), QMessageBox.StandardButton.Close)
+            return
         except Exception as e:
             QMessageBox.critical(self, "Nieznany błąd!", "Podczas wykonywania programu pojawił się nieznany błąd!")
             raise e
