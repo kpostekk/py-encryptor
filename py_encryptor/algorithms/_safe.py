@@ -10,6 +10,9 @@ from py_encryptor.utils.decorators import register_algorithm
 
 @register_algorithm
 class Aes256EAX(BaseEncryptionAlgorithm):
+    """
+    Implementation of AES-256 encryption algorithm using EAX mode.
+    """
     def __init__(self, key: str, file_path: Path):
         if len(key) < 8:
             raise ValueError('Key must be at least 8 characters long!')
@@ -48,6 +51,11 @@ class Aes256EAX(BaseEncryptionAlgorithm):
 
 @register_algorithm
 class Aes256CBC(Aes256EAX):
+    """
+    Implementation of AES-256 encryption algorithm using CBC mode.
+
+    *This algorithm is experimental and may not work properly.*
+    """
     @staticmethod
     def _create_cipher(key: str, nonce: bytes):
         return AES.new(pad(key.encode('utf-8'), 16), AES.MODE_CBC)

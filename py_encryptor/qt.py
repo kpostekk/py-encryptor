@@ -79,7 +79,7 @@ class EncryptorFrame(QFrame):
     def requestFile(self, result_target: QLineEdit):
         def wrapped():
             filepath, _ = QFileDialog.getOpenFileName(self)
-            print(filepath)
+            # print(filepath)
             result_target.setText(filepath)
 
             if result_target is self.file_source_field:
@@ -111,7 +111,7 @@ class EncryptorFrame(QFrame):
         try:
             alg: Type[BaseEncryptionAlgorithm] = self.algorithms_box.currentData()
             cryp = alg(self.password_input.text(), Path(self.file_source_field.text()))
-            print(cryp)
+            # print(cryp)
             return cryp
         except ValueError as e:
             QMessageBox.critical(self, e.__class__.__name__, str(e), QMessageBox.StandardButton.Close)

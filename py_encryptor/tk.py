@@ -20,8 +20,7 @@ layout = [
     [sg.Text('Enter a password:')],
     [sg.InputText(key='passwd', password_char='*', expand_x=True)],
     [sg.Text(key='status', visible=False)],
-    [sg.Combo([alg.display_name() for alg in available_algorithms], key='alg-combo', default_value='AES-256 (EAX)')],
-    [sg.Button('Encrypt', key='encrypt'), sg.Button('Decrypt', key='decrypt')],
+    [sg.Combo([alg.display_name() for alg in available_algorithms], key='alg-combo', default_value='AES-256 (EAX)'), sg.Button('Encrypt', key='encrypt'), sg.Button('Decrypt', key='decrypt')],
 ]
 
 window = sg.Window('Encrypt/Decrypt', layout, resizable=True)
@@ -38,7 +37,7 @@ def main():
     while True:
         event, values = window.read()
 
-        print(event, values)
+        # print(event, values)
 
         if event == sg.WIN_CLOSED:
             break
