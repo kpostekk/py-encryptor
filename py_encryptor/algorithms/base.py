@@ -9,7 +9,7 @@ class BaseEncryptionAlgorithm(abc.ABC):
         :type key: str
         :type file_path: Path
         :param key: symmetric encryption key
-        :param file_path: source file path
+        :param file_path: docs file path
         """
         if not file_path.is_file():
             raise ValueError('"file_path" must be a file!')

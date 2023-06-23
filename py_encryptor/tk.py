@@ -13,7 +13,7 @@ available_algorithms: list[Type[BaseEncryptionAlgorithm]] = AlgorithmsManager.av
 sg.theme("Default")
 
 layout = [
-    [sg.Text('Select a source file:')],
+    [sg.Text('Select a docs file:')],
     [sg.Input(key='file_source', enable_events=True, expand_x=True), sg.FileBrowse(key="file_source_picker", enable_events=True)],
     [sg.Text('Select a target (output) file:')],
     [sg.Input(key='file_target', expand_x=True), sg.FileBrowse()],

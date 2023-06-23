@@ -16,7 +16,7 @@ class EncryptorFrame(QFrame):
         super(EncryptorFrame, self).__init__(parent)
         self.setAcceptDrops(True)
 
-        # File selector (source)
+        # File selector (docs)
         self.file_source_layout = QHBoxLayout()
         self.file_source_field = QLineEdit()
         self.file_source_field.setPlaceholderText("Ścieżka do pliku")

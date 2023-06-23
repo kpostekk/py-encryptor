@@ -24,7 +24,7 @@ def get_alg_by_name(name: str):
 
 @cli.command()
 @click.option('--alg', '-a', help="Encryption algorithm", type=click.Choice(algs_names))
-@click.option('--source', '-s', help='File to encrypt')
+@click.option('--docs', '-s', help='File to encrypt')
 @click.option('--target', '-t', help="File to store encrypted data")
 @click.option('--passwd', '-p', help='Password to encrypt file')
 def encrypt(alg, source, target, passwd):
@@ -35,7 +35,7 @@ def encrypt(alg, source, target, passwd):
 
 @cli.command()
 @click.option('--alg', '-a', help="Encryption algorithm", type=click.Choice(algs_names))
-@click.option('--source', '-s', help='File to decrypt')
+@click.option('--docs', '-s', help='File to decrypt')
 @click.option('--target', '-t', help="File to store decrypted data")
 @click.option('--passwd', '-p', help='Password to decrypt file')
 def decrypt(alg, source, target, passwd):

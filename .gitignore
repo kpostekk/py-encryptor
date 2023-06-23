@@ -3,3 +3,4 @@ _pyde/
 .pyd
 .pyo
 .pyc
+/docs/_build/
